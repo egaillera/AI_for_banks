@@ -20,8 +20,8 @@ if __name__ == "__main__":
     prompt = hub.pull("hwchase17/react")
 
     # Choose the LLM to use
-    #llm = ChatOpenAI()
-    llm = ChatAnthropic(model='claude-3-opus-20240229')
+    llm = ChatOpenAI()
+    #llm = ChatAnthropic(model='claude-3-opus-20240229')
 
     # Construct the ReAct agent
     main_agent = create_react_agent(llm, tools, prompt)
@@ -29,6 +29,7 @@ if __name__ == "__main__":
     # Create an agent executor by passing in the agent and tools
     agent_executor = AgentExecutor(agent=main_agent, tools=tools, verbose=True)
 
-    agent_executor.invoke({"input":"dime productos que ofrezca BBVA apropiados para Angel Fernandez"})
+    agent_executor.invoke({"input":"busca productos apropiados para Angel Fernandez. \
+                           Responde en español"})
 
     
