@@ -76,9 +76,9 @@ def patrimonio_cliente(nivel_de_renta:int) -> int:
     if nivel_de_renta == 'bajo':
         return abs(int(random.gauss(15000,3000)))
     elif nivel_de_renta == 'medio':
-        return abs(int(random.gauss(40000,20000)))
+        return abs(int(random.gauss(50000,40000)))
     elif nivel_de_renta == 'alto':
-        abs(int(random.gauss(80000,100000)))
+        return abs(int(random.gauss(120000,70000)))
     
 
 # Crear una conexión a la base de datos
