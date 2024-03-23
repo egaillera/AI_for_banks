@@ -1,6 +1,29 @@
 import sqlite3
 from faker import Faker
 import random
+import datetime
+
+def generar_total_depositado(patrimonio_estimado):
+    # Definir un rango o distribución para generar el total depositado
+    # Por ejemplo, podrías usar un porcentaje del patrimonio estimado
+    # Aquí se usa un rango del 80% al 120% del patrimonio estimado
+    porcentaje_min = 0.2
+    porcentaje_max = 0.8
+    porcentaje = random.uniform(porcentaje_min, porcentaje_max)
+    
+    # Calcular el total depositado
+    total_depositado = int(patrimonio_estimado * porcentaje)
+    
+    return total_depositado
+
+
+def generar_fecha_nacimiento():
+    year_actual = datetime.datetime.now().year
+    year_nacimiento = random.randint(year_actual - 80, year_actual - 18)  # Edad entre 18 y 80 años
+    fecha_nacimiento = datetime.datetime(year_nacimiento, 
+                                random.randint(1, 12), 
+                                random.randint(1, 28))  # Se eligen aleatoriamente el mes y el día
+    return fecha_nacimiento
 
 
 def perfil_financiero_cliente() -> str:
@@ -63,7 +86,8 @@ def perfil_financiero_cliente() -> str:
         "Prefiere estrategias de inversión basadas en la teoría del ciclo económico para tomar decisiones de inversión.",
         "Está interesado en la inversión en fondos de inversión inmobiliaria para obtener ingresos pasivos.",
         "Le gustaría explorar oportunidades de inversión en el mercado de arte digital como una forma de invertir en activos digitales.",
-        "Busca productos financieros que le ofrezcan un equilibrio entre riesgo y rendimiento."
+        "Busca productos financieros que le ofrezcan un equilibrio entre riesgo y rendimiento.",
+        "Ha manifestado interés por inversión en private equity"
     ]
 
     # Seleccionar una frase aleatoria
@@ -90,9 +114,10 @@ c.execute('''CREATE TABLE clientes (
                 ID_cliente INTEGER PRIMARY KEY,
                 Nombre TEXT,
                 Apellido TEXT,
-                Edad INTEGER,
+                Fecha_de_nacimiento DATE,
                 Nivel_de_renta TEXT,
                 Patrimonio_estimado NUMERIC,
+                Total_depositado NUMERIC,
                 Situacion_familiar TEXT,
                 Tipo_de_cliente TEXT,
                 Preferencias_manifestadas TEXT,
@@ -106,22 +131,23 @@ fake = Faker('es_ES')
 for _ in range(1000):
     nombre = fake.first_name()
     apellido = fake.last_name()
-    edad = random.randint(18, 90)
+    fecha_de_nacimiento = generar_fecha_nacimiento()
     nivel_de_renta = random.choice(['bajo', 'medio', 'alto'])
     patrimonio_estimado = patrimonio_cliente(nivel_de_renta=nivel_de_renta)
+    total_depositado = generar_total_depositado(patrimonio_estimado=patrimonio_estimado)
     situacion_familiar = random.choices(['soltero', 'casado', 'divorciado', 'viudo'], weights=(25,40,25,10))[0]
     tipo_de_cliente = random.choices(['residente', 'no residente'],weights=(90,10))[0]
     preferencias_manifestadas = perfil_financiero_cliente()
-    fecha_creacion = fake.date_between(start_date='-5y', end_date='today')
+    fecha_creacion = fake.date_between(start_date='-15y', end_date='today')
     ultima_actualizacion = fake.date_between(start_date='-1y', end_date='today')
     nivel_tolerancia_riesgo = random.randint(1, 10)
 
-    c.execute('''INSERT INTO clientes (Nombre, Apellido, Edad, Nivel_de_renta, Patrimonio_estimado,
-                    Situacion_familiar, Tipo_de_cliente,
+    c.execute('''INSERT INTO clientes (Nombre, Apellido, Fecha_de_nacimiento, Nivel_de_renta, Patrimonio_estimado,
+                    Total_depositado, Situacion_familiar, Tipo_de_cliente,
                     Preferencias_manifestadas, Fecha_de_creacion, Ultima_actualizacion, Nivel_tolerancia_riesgo)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                    (nombre, apellido, edad, nivel_de_renta, patrimonio_estimado, situacion_familiar,
-                    tipo_de_cliente, preferencias_manifestadas,
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)''',
+                    (nombre, apellido, fecha_de_nacimiento, nivel_de_renta, patrimonio_estimado, 
+                    total_depositado, situacion_familiar, tipo_de_cliente, preferencias_manifestadas,
                     fecha_creacion, ultima_actualizacion, nivel_tolerancia_riesgo))
 
 # Guardar los cambios y cerrar la conexión
