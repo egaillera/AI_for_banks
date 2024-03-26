@@ -76,7 +76,22 @@ def create_clients_agent():
     Never query for all the columns from a specific table, only ask for the relevant columns given the question.
     You have access to tools for interacting with the database.
     Only use the given tools. Only use the information returned by the tools to construct your final answer.
-    You MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.
+    You MUST double check your query before executing it. If you get an error while executing a query, 
+    rewrite the query and try again.
+
+    The fields of the client tables are:
+                Nombre TEXT,
+                Apellido TEXT,
+                Fecha_de_nacimiento DATE,
+                Nivel_de_renta TEXT,
+                Patrimonio_estimado NUMERIC,
+                Total_depositado NUMERIC,
+                Situacion_familiar TEXT,
+                Tipo_de_cliente TEXT,
+                Preferencias_manifestadas TEXT,
+                Fecha_de_creacion DATE,
+                Ultima_actualizacion DATE,
+                Nivel_tolerancia_riesgo INTEGER
 
     DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
 
